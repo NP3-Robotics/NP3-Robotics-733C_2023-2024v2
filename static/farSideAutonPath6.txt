@@ -1,0 +1,11 @@
+38, -11, 27.604
+36, -11.006, 15.938
+35, -11, 0
+35, -11, 0
+15, -10.88, 0
+endData
+127
+127
+200
+38, -11, 35, -11.014, 36.091, -11, 35, -11
+#PATH.JERRYIO-DATA {"appVersion":"0.5.1","format":"LemLib v0.4.x (inch, byte-voltage)","gc":{"robotWidth":15,"robotHeight":18,"robotIsHolonomic":false,"showRobot":true,"uol":2.54,"pointDensity":2,"controlMagnetDistance":0.7750015500031,"fieldImage":{"displayName":"VRC 2024 - Over Under","signature":"VRC 2024 - Over Under","origin":{"__type":"built-in"}}},"paths":[{"segments":[{"controls":[{"uid":"IN1l7XThkz","x":38,"y":-11,"lock":false,"visible":true,"heading":270,"__type":"end-point"},{"uid":"NuTsnFbKUq","x":35,"y":-11.013683328679134,"lock":false,"visible":true,"__type":"control"},{"uid":"3sLw9FVINm","x":36.091,"y":-10.999999999999998,"lock":false,"visible":true,"__type":"control"},{"uid":"zfKl3PAtsl","x":35,"y":-11,"lock":false,"visible":true,"heading":270,"__type":"end-point"}],"speedProfiles":[],"lookaheadKeyframes":[],"uid":"wcCen7g5sz"}],"pc":{"speedLimit":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":127,"label":"127"},"step":1,"from":20,"to":127},"bentRateApplicableRange":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":4,"label":"4"},"step":0.01,"from":1.4,"to":1.8},"maxDecelerationRate":127},"name":"Path","uid":"994MubseCd","lock":false,"visible":true}]}

@@ -1,0 +1,32 @@
+{
+  "configurations": [
+    {
+      "name": "PROS Project",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "/Users/alvinao/NP3-Robotics-733C_2023-2024v2/include"
+      ],
+      "defines": [
+        "_DEBUG",
+        "UNICODE",
+        "_UNICODE"
+      ],
+      "compilerPath": "/Users/alvinao/Library/Application Support/Code/User/globalStorage/sigbots.pros/install/pros-toolchain-macos/bin/arm-none-eabi-g++",
+      "cStandard": "gnu11",
+      "cppStandard": "gnu++20",
+      "intelliSenseMode": "gcc-arm",
+      "compileCommands": "/Users/alvinao/NP3-Robotics-733C_2023-2024v2/compile_commands.json",
+      "macFrameworkPath": [
+        "/System/Library/Frameworks"
+      ],
+      "browse": {
+        "path": [
+          "/Users/alvinao/NP3-Robotics-733C_2023-2024v2"
+        ],
+        "limitSymbolsToIncludedHeaders": true,
+        "databaseFilename": ""
+      }
+    }
+  ],
+  "version": 4
+}
