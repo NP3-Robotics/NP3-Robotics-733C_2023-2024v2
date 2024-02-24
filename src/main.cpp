@@ -1,5 +1,7 @@
 #include "main.h"
 #include "lemlib/api.hpp"
+#include <iostream>
+#include <string>
 
 #include "externs/drivetrain_initialization.h"
 #include "externs/lvgl_initialization.h"
@@ -35,7 +37,6 @@ void initialize()
 
 
 
-  /*
   // Temperature and battery checks
   //////////////////////////////////////////
   for (int i = 0; i < sizeof(leftMtrs.get_temperatures()); i++) // For the left motors
@@ -74,7 +75,6 @@ void initialize()
     controller.rumble("-");
   }
   //////////////////////////////////////////
-  */
 
 
 
@@ -84,9 +84,23 @@ void initialize()
 
 void disabled() {} // Has no use
 
+void buttonInitialization(lv_obj_t* button, int freenum, int x, int y, int* dimensions, lv_obj_t* button_label, const char* button_name) {
+  lv_obj_set_free_num(button, freenum);
+  lv_btn_set_action(button, LV_BTN_ACTION_CLICK, btn_click);
+  lv_obj_set_size(button, dimensions[0], dimensions[1]);
+  lv_obj_align(button, NULL, LV_ALIGN_CENTER, x, y);
+  lv_btn_set_style(button, LV_BTN_STYLE_REL, &btn_style_rel);
+  lv_btn_set_style(button, LV_BTN_STYLE_PR, &btn_style_pr);
+  lv_btn_set_style(button, LV_BTN_STYLE_TGL_REL, &btn_style_tgl_rel);
+  lv_btn_set_style(button, LV_BTN_STYLE_TGL_PR, &btn_style_tgl_pr);
+  
+  lv_label_set_style(button_label, &label_style);
+  lv_label_set_text(button_label, button_name);
+}
+
 void competition_initialize()
 {
-  std::cout<< "buttons done" << std::endl;
+  std::cout<< "Buttons done" << std::endl;
 
   // Initialize lvgl buttons
   //////////////////////////////////////////
@@ -123,70 +137,30 @@ void competition_initialize()
   lv_style_copy(&label_style, &lv_style_plain);
   label_style.text.color = LV_COLOR_WHITE;
 
-  close_btn = lv_btn_create(lv_scr_act(), NULL);
-  lv_obj_set_free_num(close_btn, 0);
-  lv_btn_set_action(close_btn, LV_BTN_ACTION_CLICK, btn_click);
-  lv_obj_set_size(close_btn, 225, 67);
-  lv_obj_align(close_btn, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 10);
-  lv_btn_set_style(close_btn, LV_BTN_STYLE_REL, &btn_style_rel);
-  lv_btn_set_style(close_btn, LV_BTN_STYLE_PR, &btn_style_pr);
-  lv_btn_set_style(close_btn, LV_BTN_STYLE_TGL_REL, &btn_style_tgl_rel);
-  lv_btn_set_style(close_btn, LV_BTN_STYLE_TGL_PR, &btn_style_tgl_pr);
-  close_btn_label = lv_label_create(close_btn, NULL);
-  lv_label_set_style(close_btn_label, &label_style);
-  lv_label_set_text(close_btn_label, "Close/Left Side");
 
-  far_btn = lv_btn_create(lv_scr_act(), NULL);
-  lv_obj_set_free_num(far_btn, 1);
-  lv_btn_set_action(far_btn, LV_BTN_ACTION_CLICK, btn_click);
-  lv_obj_set_size(far_btn, 225, 67);
-  lv_obj_align(far_btn, NULL, LV_ALIGN_IN_TOP_RIGHT, -10, 10);
-  lv_btn_set_style(far_btn, LV_BTN_STYLE_REL, &btn_style_rel);
-  lv_btn_set_style(far_btn, LV_BTN_STYLE_PR, &btn_style_pr);
-  lv_btn_set_style(far_btn, LV_BTN_STYLE_TGL_REL, &btn_style_tgl_rel);
-  lv_btn_set_style(far_btn, LV_BTN_STYLE_TGL_PR, &btn_style_tgl_pr);
-  far_btn_label = lv_label_create(far_btn, NULL);
-  lv_label_set_style(far_btn_label, &label_style);
-  lv_label_set_text(far_btn_label, "Far/Right Side");
+  static int buttonDimensions[] = {225, 67};
 
+  // Screen dimensions are 480x240
+
+  close_awp_btn = lv_btn_create(lv_scr_act(), NULL);
+  close_awp_btn_label = lv_label_create(close_awp_btn, NULL);
+  close_elim_btn = lv_btn_create(lv_scr_act(), NULL);
+  close_elim_btn_label = lv_label_create(close_elim_btn, NULL);
+  far_six_btn = lv_btn_create(lv_scr_act(), NULL);
+  far_six_btn_label = lv_label_create(far_six_btn, NULL);
+  far_five_btn = lv_btn_create(lv_scr_act(), NULL);
+  far_five_btn_label = lv_label_create(far_five_btn, NULL);
   skills_btn = lv_btn_create(lv_scr_act(), NULL);
-  lv_obj_set_free_num(skills_btn, 2);
-  lv_btn_set_action(skills_btn, LV_BTN_ACTION_CLICK, btn_click);
-  lv_obj_set_size(skills_btn, 225, 67);
-  lv_obj_align(skills_btn, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 10, -10);
-  lv_btn_set_style(skills_btn, LV_BTN_STYLE_REL, &btn_style_rel);
-  lv_btn_set_style(skills_btn, LV_BTN_STYLE_PR, &btn_style_pr);
-  lv_btn_set_style(skills_btn, LV_BTN_STYLE_TGL_REL, &btn_style_tgl_rel);
-  lv_btn_set_style(skills_btn, LV_BTN_STYLE_TGL_PR, &btn_style_tgl_pr);
   skills_btn_label = lv_label_create(skills_btn, NULL);
-  lv_label_set_style(skills_btn_label, &label_style);
-  lv_label_set_text(skills_btn_label, "Skills Auton");
-
   disable_btn = lv_btn_create(lv_scr_act(), NULL);
-  lv_obj_set_free_num(disable_btn, 3);
-  lv_btn_set_action(disable_btn, LV_BTN_ACTION_CLICK, btn_click);
-  lv_obj_set_size(disable_btn, 225, 67);
-  lv_obj_align(disable_btn, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, -10, -10);
-  lv_btn_set_style(disable_btn, LV_BTN_STYLE_REL, &btn_style_rel);
-  lv_btn_set_style(disable_btn, LV_BTN_STYLE_PR, &btn_style_pr);
-  lv_btn_set_style(disable_btn, LV_BTN_STYLE_TGL_REL, &btn_style_tgl_rel);
-  lv_btn_set_style(disable_btn, LV_BTN_STYLE_TGL_PR, &btn_style_tgl_pr);
   disable_btn_label = lv_label_create(disable_btn, NULL);
-  lv_label_set_style(disable_btn_label, &label_style);
-  lv_label_set_text(disable_btn_label, "Disable Auton");
 
-  skill_issue_btn = lv_btn_create(lv_scr_act(), NULL);
-  lv_obj_set_free_num(skill_issue_btn, 0);
-  lv_btn_set_action(skill_issue_btn, LV_BTN_ACTION_CLICK, btn_click);
-  lv_obj_set_size(skill_issue_btn, 225, 67);
-  lv_obj_align(skill_issue_btn, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 10);
-  lv_btn_set_style(skill_issue_btn, LV_BTN_STYLE_REL, &btn_style_rel);
-  lv_btn_set_style(skill_issue_btn, LV_BTN_STYLE_PR, &btn_style_pr);
-  lv_btn_set_style(skill_issue_btn, LV_BTN_STYLE_TGL_REL, &btn_style_tgl_rel);
-  lv_btn_set_style(skill_issue_btn, LV_BTN_STYLE_TGL_PR, &btn_style_tgl_pr);
-  skill_issue_btn_label = lv_label_create(skill_issue_btn, NULL);
-  lv_label_set_style(skill_issue_btn_label, &label_style);
-  lv_label_set_text(skill_issue_btn_label, "Close/Left Side");
+  buttonInitialization(close_awp_btn, 0, -127, 86, buttonDimensions, close_awp_btn_label, "Close AWP");
+  buttonInitialization(close_elim_btn, 1, -127, 0, buttonDimensions, close_elim_btn_label, "Close Mid Rish");
+  buttonInitialization(far_six_btn, 2, 127, 86, buttonDimensions, far_six_btn_label, "Far Six Ball");
+  buttonInitialization(far_five_btn, 3, 127, 0, buttonDimensions, far_five_btn_label, "Far Five Ball");
+  buttonInitialization(skills_btn, 4, -127, -86, buttonDimensions, skills_btn_label, "Skills Auton");
+  buttonInitialization(disable_btn, 5, 127, -86, buttonDimensions, disable_btn_label, "Disabled Auton");
   //////////////////////////////////////////
 
 
@@ -195,9 +169,11 @@ void competition_initialize()
 
   // Sets the buttons to their default state
   //////////////////////////////////////////
-  lv_btn_set_state(close_btn, closeSide);
-  lv_btn_set_state(far_btn, farSide);
-  lv_btn_set_state(disable_btn, disable);
-  lv_btn_set_state(skills_btn, skills);
+  lv_btn_set_state(close_awp_btn, auton[0]);
+  lv_btn_set_state(close_elim_btn, auton[1]);
+  lv_btn_set_state(far_six_btn, auton[2]);
+  lv_btn_set_state(far_five_btn, auton[3]);
+  lv_btn_set_state(skills_btn, auton[4]);
+  lv_btn_set_state(disable_btn, auton[5]);
   //////////////////////////////////////////
 }
