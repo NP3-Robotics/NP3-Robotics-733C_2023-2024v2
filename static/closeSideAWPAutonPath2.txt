@@ -1,0 +1,39 @@
+-60, -34, 87.56
+-59.675, -35.973, 86.955
+-59.203, -37.915, 86.46
+-58.572, -39.812, 85.876
+-57.766, -41.642, 85.81
+-56.813, -43.399, 86.125
+-55.691, -45.054, 86.481
+-54.445, -46.617, 86.943
+-53.06, -48.058, 88.092
+-51.577, -49.4, 88.733
+-49.995, -50.622, 90.049
+-48.34, -51.744, 90.694
+-46.619, -52.763, 91.908
+-44.845, -53.685, 92.467
+-43.029, -54.523, 90.209
+-41.176, -55.274, 87.348
+-39.293, -55.948, 84.391
+-37.388, -56.556, 81.325
+-35.463, -57.098, 78.14
+-33.521, -57.575, 74.819
+-31.566, -57.998, 71.344
+-29.601, -58.369, 67.69
+-27.627, -58.693, 63.828
+-25.646, -58.968, 59.716
+-23.66, -59.2, 55.299
+-21.669, -59.391, 50.498
+-19.675, -59.545, 45.189
+-17.679, -59.663, 39.167
+-15.68, -59.746, 32.032
+-13.681, -59.793, 22.761
+-11.642, -59.811, 0
+-11.642, -59.811, 0
+8.358, -59.988, 0
+endData
+127
+100
+200
+-60, -34, -57.59, -53.982, -34.05, -59.811, -11.642, -59.811
+#PATH.JERRYIO-DATA {"appVersion":"0.6.0","format":"LemLib v0.4.x (inch, byte-voltage)","gc":{"robotWidth":15,"robotHeight":18,"robotIsHolonomic":false,"showRobot":true,"uol":2.54,"pointDensity":2,"controlMagnetDistance":1.968503937007874,"fieldImage":{"displayName":"VRC 2024 - Over Under","signature":"VRC 2024 - Over Under","origin":{"__type":"built-in"}}},"paths":[{"segments":[{"controls":[{"uid":"GSItBLS19b","x":-60,"y":-34,"lock":false,"visible":true,"heading":0,"__type":"end-point"},{"uid":"YAUnPIhxXh","x":-57.590485330408555,"y":-53.98238278036743,"lock":false,"visible":true,"__type":"control"},{"uid":"wUZeIYSmc0","x":-34.04991536566567,"y":-59.81115964151314,"lock":false,"visible":true,"__type":"control"},{"uid":"b1cSNbwkVk","x":-11.64156603745069,"y":-59.81115964151314,"lock":false,"visible":true,"heading":270,"__type":"end-point"}],"speedProfiles":[],"lookaheadKeyframes":[],"uid":"338i6FJJeL"}],"pc":{"speedLimit":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":127,"label":"127"},"step":1,"from":20,"to":100},"bentRateApplicableRange":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":1,"label":"1"},"step":0.001,"from":0,"to":0.1},"maxDecelerationRate":127},"name":"Path","uid":"MrSTSmgzHj","lock":false,"visible":true}]}
