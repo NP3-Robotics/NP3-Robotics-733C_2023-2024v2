@@ -1,9 +1,5 @@
 #include "main.h"
 
-#ifndef initLvgl
-
-#define initLvgl
-
 extern lv_obj_t *far_six_btn;
 extern lv_obj_t *far_five_btn;
 extern lv_obj_t *close_awp_btn;
@@ -38,5 +34,3 @@ extern lv_style_t label_style;
 extern bool auton[];
 
 extern lv_res_t btn_click(lv_obj_t *btn);
-
-#endif
