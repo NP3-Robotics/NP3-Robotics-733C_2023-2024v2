@@ -72,7 +72,7 @@ void initialize()
   if (controller.get_battery_level() <= 15) // Checks if the battery is 15% or below
   {
     std::cout << "Battery low at " << controller.get_battery_level() << std::endl;
-    controller.rumble("-");
+    controller.rumble("-       ");
   }
   //////////////////////////////////////////
 
@@ -156,7 +156,7 @@ void competition_initialize()
   disable_btn_label = lv_label_create(disable_btn, NULL);
 
   buttonInitialization(close_awp_btn, 0, -127, 86, buttonDimensions, close_awp_btn_label, "Close AWP");
-  buttonInitialization(close_elim_btn, 1, -127, 0, buttonDimensions, close_elim_btn_label, "Close Mid Rish");
+  buttonInitialization(close_elim_btn, 1, -127, 0, buttonDimensions, close_elim_btn_label, "Close Mid Rush");
   buttonInitialization(far_six_btn, 2, 127, 86, buttonDimensions, far_six_btn_label, "Far Six Ball");
   buttonInitialization(far_five_btn, 3, 127, 0, buttonDimensions, far_five_btn_label, "Far Five Ball");
   buttonInitialization(skills_btn, 4, -127, -86, buttonDimensions, skills_btn_label, "Skills Auton");

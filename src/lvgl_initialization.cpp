@@ -40,7 +40,7 @@ lv_style_t btn_style_tgl_pr_blue;
 lv_style_t label_style;
 
 
-bool auton[] = {false, false, false, false, false, true}; // Autonomous program {Close AWP, Close Elims, Far Six Ball, Far Five Ball, Skills Auton, Disabled Auton}
+bool auton[] = {false, false, true, false, false, false}; // Autonomous program {Close AWP, Close Elims, Far Six Ball, Far Five Ball, Skills Auton, Disabled Auton}
 
 lv_res_t btn_click(lv_obj_t *btn) // When button is pressed
 {
