@@ -29,14 +29,6 @@ lv_style_t btn_style_rel;
 lv_style_t btn_style_pr;
 lv_style_t btn_style_tgl_rel;
 lv_style_t btn_style_tgl_pr;
-lv_style_t btn_style_rel_red;
-lv_style_t btn_style_pr_red;
-lv_style_t btn_style_tgl_rel_red;
-lv_style_t btn_style_tgl_pr_red;
-lv_style_t btn_style_rel_blue;
-lv_style_t btn_style_pr_blue;
-lv_style_t btn_style_tgl_rel_blue;
-lv_style_t btn_style_tgl_pr_blue;
 lv_style_t label_style;
 
 
@@ -52,14 +44,14 @@ lv_res_t btn_click(lv_obj_t *btn) // When button is pressed
     auton[free_num] = true; // Sets selected button to true
 
     // Toggles buttons based on values
-    //////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     lv_btn_set_state(close_awp_btn, auton[0]);
     lv_btn_set_state(close_elim_btn, auton[1]);
     lv_btn_set_state(far_six_btn, auton[2]);
     lv_btn_set_state(far_five_btn, auton[3]);
     lv_btn_set_state(skills_btn, auton[4]);
     lv_btn_set_state(disable_btn, auton[5]);
-    //////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     return LV_RES_OK;
 }
