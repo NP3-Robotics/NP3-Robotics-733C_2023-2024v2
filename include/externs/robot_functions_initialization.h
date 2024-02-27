@@ -1,19 +1,13 @@
+#ifndef MAIN
 #include "main.h"
+#define MAIN
+#endif
 
-// Controller
-//////////////////////////////////////////
-extern pros::Controller controller;
-//////////////////////////////////////////
+extern pros::Controller controller; // Controller
 
-// Pneumatics for wings and hang
-//////////////////////////////////////////
-extern pros::ADIDigitalOut wingLeft;
-extern pros::ADIDigitalOut wingRight;
-extern pros::ADIDigitalOut hang;
-//////////////////////////////////////////
+extern pros::ADIDigitalOut wingLeft; // Pneumatic for left wing
+extern pros::ADIDigitalOut wingRight; // Pneumatic for right wing
+extern pros::ADIDigitalOut hang; // Pneumatic for hang
 
-// Motors for catapult and intake
-//////////////////////////////////////////
-extern pros::Motor cata;
-extern pros::Motor intake;
-//////////////////////////////////////////
+extern pros::Motor cata; // Motor for catapult
+extern pros::Motor intake; // Motor for intake

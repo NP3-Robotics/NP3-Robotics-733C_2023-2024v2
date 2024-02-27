@@ -1,27 +1,10 @@
 #include "main.h"
 
-// Controller
-//////////////////////////////////////////
-pros::Controller controller(pros::E_CONTROLLER_MASTER);
-//////////////////////////////////////////
+pros::Controller controller(pros::E_CONTROLLER_MASTER); // Controller
 
+pros::ADIDigitalOut wingLeft('A', false); // Pneumatic for the left wing
+pros::ADIDigitalOut wingRight('B', false); // Pneumatic for the right wing
+pros::ADIDigitalOut hang('C', false); // Pneumatic for the hang
 
-
-
-
-// Pneumatics for wings and hang
-//////////////////////////////////////////
-pros::ADIDigitalOut wingLeft('A', false);
-pros::ADIDigitalOut wingRight('B', false);
-pros::ADIDigitalOut hang('C', false);
-//////////////////////////////////////////
-
-
-
-
-
-// Motors for catapult and intake
-//////////////////////////////////////////
-pros::Motor cata(21, pros::E_MOTOR_GEAR_RED, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor intake(10, pros::E_MOTOR_GEAR_RED, true, pros::E_MOTOR_ENCODER_DEGREES);
-//////////////////////////////////////////
+pros::Motor cata(21, pros::E_MOTOR_GEAR_RED, true, pros::E_MOTOR_ENCODER_DEGREES); // Motor for catapult
+pros::Motor intake(10, pros::E_MOTOR_GEAR_RED, true, pros::E_MOTOR_ENCODER_DEGREES); // Motor for intake
