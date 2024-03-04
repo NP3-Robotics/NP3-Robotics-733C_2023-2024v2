@@ -1,19 +1,16 @@
-// External libraries
-//////////////////////////////////////////
-#include "main.h"
-#include <iostream>
-//////////////////////////////////////////
+#include <iostream> // External libraries
 
 
 
 
 
 // My global variables
-//////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "externs/drivetrain_initialization.h"
 #include "externs/lvgl_initialization.h"
 #include "externs/robot_functions_initialization.h"
-//////////////////////////////////////////
+#include "externs/pid_class.h"
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -32,9 +29,15 @@ ASSET(farSideAutonPath8_txt);
 ASSET(farSideAutonPath9_txt);
 ASSET(farSideAutonPath10_txt);
 
+ASSET(farSideAutonPath5_2_txt);
+ASSET(farSideAutonPath6_2_txt);
+ASSET(farSideAutonPath7_2_txt);
+ASSET(farSideAutonPath8_2_txt);
+
 ASSET(farSideFiveAutonPath2_txt);
 ASSET(farSideFiveAutonPath3_txt);
 ASSET(farSideFiveAutonPath4_txt);
+ASSET(farSideFiveAutonPath5_txt);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -70,52 +73,24 @@ ASSET(skillsAutonPath9_txt);
 ASSET(skillsAutonPath10_txt);
 ASSET(skillsAutonPath11_txt);
 ASSET(skillsAutonPath12_txt);
+ASSET(skillsAutonPath13_txt);
+ASSET(skillsAutonPath14_txt);
+ASSET(skillsAutonPath15_txt);
+ASSET(skillsAutonPath16_txt);
+ASSET(skillsAutonPath17_txt);
+ASSET(skillsAutonPath18_txt);
+ASSET(skillsAutonPath19_txt);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 
-
-// Catapult PID
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-class PID_info // PID variables storage
-{
-public:
-    double endpoint;
-    double error;
-    double accError;
-    double velocity;
-};
-
-PID_info findCataPIDOutput(PID_info input) // Updates PID variables
-{
-    PID_info output; // How the output would be reported
-
-    // Setting PID constants
-    double p = 3;
-    double i = 0.5;
-    double d = 2;
-
-    output.endpoint = input.endpoint; // Setting desired endpoint for the main Catapult motor
-
-    output.error = output.endpoint - cata.get_position(); // New error
-    output.accError += output.error; // Accumlates error for I term
-    double errorDif = output.error - input.error; // Change in error for D term
-
-    output.velocity = p * output.error + i * output.accError + d * errorDif; // PID calculation
-
-    if (output.velocity > 54) // Sets the max rpm of the catapult to 32.4 rpm
-        output.velocity = 54;
-
-    return output;
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 void autonomous()
 {
 
-    // Left, close, or match loading side
+    // Left or close side autonomous
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     if (auton[0]) // Useless now that the other close side autonomous works
     {
@@ -192,7 +167,7 @@ void autonomous()
 
 
 
-    // Right, far, or goal side
+    // Right or far side autonomous
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     if (auton[2]) // Six ball auton
     {
@@ -218,14 +193,13 @@ void autonomous()
         base.waitUntilDone(); // When done travelling the first path
         std::cout << "2 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
 
-
         base.turnTo(-10, -9, 1000); // Turns the robot towards the opposite goal
 
         base.waitUntilDone(); // When done turning
         intake.move_velocity(-600); // Outtakes the first triball
         wingRight.set_value(true); // Enables the right wing to hit the center triball
 
-        base.follow(farSideAutonPath3_txt, 10, 2000, false); // Scores both center triballs (one, two)
+        base.follow(farSideAutonPath3_txt, 10, 1000, false); // Scores both center triballs (one, two)
 
         base.waitUntilDone(); // When done travelling the third path
         std::cout << "3 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
@@ -237,18 +211,63 @@ void autonomous()
         base.waitUntilDone(); // When done turning
         intake.move_velocity(600); // Begin intaking
 
-        base.follow(farSideAutonPath4_txt, 8, 2500, false); // Intakes the last triball (three) in the center
+        base.follow(farSideAutonPath4_txt, 8, 3000, false); // Intakes the last triball (three) in the center
 
         base.waitUntilDone(); // When done travelling the fourth path
         std::cout << "4 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
         intake.move_velocity(0); // Turns off the intake
 
+
+        // All the new changes
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        base.follow(farSideAutonPath5_2_txt, 3, 2500, true); // Brings the robot back near the starting position
+        std::cout << "5 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
+
+
+        base.waitUntilDone(); // When done travelling the fifth plan
+        intake.move_velocity(-600); // Outakes the third triball towards the goal
+        pros::delay(500); // Wait half a second
+
+        base.turnTo(50, -27.53, 1000); // Faces the intake towards the corridor
+
+        base.waitUntilDone(); // When done turning
+        intake.move_velocity(600); // Beings intaking in preparation for the fourth triball
+        std::cout << "Turn done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
+
+
+        base.follow(farSideAutonPath6_2_txt, 6, 2500, false); // Intakes the triball (four) under the elevation bar 
+        std::cout << "6 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
+
+
+        base.waitUntilDone(); // When done travelling the sixth path
+        intake.move_velocity(0); // Turns off the intake
+
+        base.follow(farSideAutonPath7_2_txt, 7,  2000, true); // Brings the robot near the starting position
+
+        base.turnTo(26.55, -62, 1000); // Turns the robot 180 degrees
+
+        base.follow(farSideAutonPath8_2_txt, 8, 2000, false); // Scores the third, fourth, and alliance triballs (five) while descoring the match load triball (six)
+
+        base.waitUntil(6); // After travelling 5 inches
+        wingLeft.set_value(true); // Activate the left wing in order to descore the match load
+
+        base.waitUntil(14); // After travelling 10 inches
+        wingLeft.set_value(false); // Turn off the left wing so it doesn't scrape against the wall
+
+        base.moveToPoint(59, -36, 1000, true); // Moves the robot away from the goal
+
+        base.moveToPoint(59, -30, 1000, false); // Rams the goal to ensure the triballs are in
+
+        base.moveToPoint(59, -36, 1000, true); // Moves the robot away from the goal in order to ensure triballs are scored
+
+        /* Old autonomous code
         base.turnTo(11, -25, 2000); // Turns the robot towards the opposite goals
 
         // Scores the triball (three)
         base.follow(farSideAutonPath5_txt, 8, 2500, false);
         
-        base.waitUntil(15); // After travelling 15 in
+        base.waitUntil(15); // After travelling 15 inches
         intake.move_velocity(-600); // Begin outtaking the triball
 
         base.waitUntilDone(); // When done travelling the fifth path
@@ -284,6 +303,7 @@ void autonomous()
         std::cout << "8 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
 
         base.moveToPoint(59, -36, 1000, true); // Moves the robot away from the goal in order to ensure triballs are scored
+        */
     }
     
     if (auton[3]) // Five ball autonomous in case of interference autonomous
@@ -305,74 +325,52 @@ void autonomous()
         base.waitUntilDone(); // When done travelling the first path
         std::cout << "1 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
 
-        base.follow(farSideFiveAutonPath2_txt, 5, 2000, true); // Repositions the robot a bit farther from the center
+        base.follow(farSideFiveAutonPath2_txt, 5, 2000, true); // Brings the robot near its starting position
 
-        base.waitUntilDone(); // When done travelling the first path
+        base.waitUntilDone(); // When done travelling the second path
         std::cout << "2 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
-
         intake.move_velocity(-600); // Outtakes the first triball
+        pros::delay(500); // Wait half a second
 
-        base.turnTo(-10, -9, 1000); // Turns the robot towards the opposite goal
+        base.turnTo(50, -27.53, 1000); // Faces the intake towards the corridor
+        
+        base.waitUntilDone(); // When done turning
+        intake.move_velocity(600); // Beings intaking
 
-        base.follow(farSideFiveAutonPath3_txt, 10, 2000, false); // Scores both center triballs (one)
+        base.follow(farSideAutonPath6_2_txt, 10, 2000, false); // Intakes the triball (two) under the elevation bar
 
         base.waitUntilDone(); // When done travelling the third path
         std::cout << "3 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
         intake.move_velocity(0); // Turns off the intake
-        wingRight.set_value(false); // Turns off the right wing
 
-        base.turnTo(40, 0, 2000); // Turns the robot towards the goal
+        base.follow(farSideAutonPath7_2_txt, 8,  2000, true); // Brings the robot near the starting position
 
-        base.waitUntilDone(); // When done turning
-        intake.move_velocity(600); // Begin intaking
+        base.turnTo(26.55, -62, 1000); // Turns the robot 180 degrees
 
-        base.follow(farSideFiveAutonPath4_txt, 8, 2500, false); // Intakes the closest triball (two) in the center
+        base.follow(farSideAutonPath8_2_txt, 8, 2000, false); // Scores the second, third, and alliance triballs (fourth) while descoring the match load triball (six)
 
-        base.waitUntilDone(); // When done travelling the fourth path
-        std::cout << "4 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
-        intake.move_velocity(0); // Turns off the intake
+        base.waitUntil(5); // After travelling 5 inches
+        wingLeft.set_value(true); // Activate the left wing in order to descore the match load
 
-        base.turnTo(11, -25, 2000); // Turns the robot towards the opposite goals
+        base.waitUntil(10); // After travelling 10 inches
+        wingLeft.set_value(false); // Turn off the left wing so it doesn't scrape against the wall
 
-        // Scores the triball (three)
-        base.follow(farSideAutonPath5_txt, 8, 2500, false);
-        
-        base.waitUntil(15); // After travelling 15 in
-        intake.move_velocity(-600); // Begin outtaking the triball
+        base.moveToPoint(59, -36, 1000, true); // Moves the robot away from the goal
 
-        base.waitUntilDone(); // When done travelling the fifth path
-        std::cout << "5 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
-        intake.move_velocity(0); // Turns off the intake
-
-        base.follow(farSideAutonPath6_txt, 10, 2000, true); // Intakes the triball (four) under the elevation bar
-
-        base.waitUntilDone(); // When done travelling the sixth path
-        std::cout << "6 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
-
-        base.turnTo(68.058, -37.555, 1000);
-
-        base.follow(farSideAutonPath7_txt, 10, 2000, false); // Intakes the triball (four) under the elevation bar
-
-        base.waitUntil(14); // After travelling 14 in
-        intake.move_velocity(600); // Beings intaking
-
-        base.waitUntilDone(); // When done travelling the seventh path
-        std::cout << "7 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
-
-        base.follow(farSideAutonPath8_txt, 10, 2000, true); // Brings the bot closer to the goal
-
-        base.turnTo(15.199, -79.523, 1000); // Turns the robot ~180 degrees
-
-        base.waitUntilDone(); // When done turning
-        wingLeft.set_value(true); // Activates the left wing
-        intake.move_velocity(-600); // Beings outtaking the fourth triball
-
-        base.follow(farSideAutonPath9_txt, 10, 2000, false); // Descores the triball (five) and scores the alliance triball and the two remaining triballs (four, five, and six)
-
-        base.waitUntilDone(); // When done travelling the eith path
-        std::cout << "8 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
+        base.moveToPoint(59, -30, 1000, false); // Rams the goal to ensure the triballs are in
 
         base.moveToPoint(59, -36, 1000, true); // Moves the robot away from the goal in order to ensure triballs are scored
+
+        base.follow(farSideFiveAutonPath3_txt, 8, 2000, true); // Moves the robot closer to the remaining central triball
+
+        base.turnTo(40.682, -57.215, 1000); // Turns the robot 180 degrees
+
+        base.follow(farSideFiveAutonPath4_txt, 8, 1000, false); // Intakes the last central triball (five)
+
+        base.follow(farSideFiveAutonPath5_txt, 8, 2000, false); // Scores the last triball into the goal
+
+        base.waitUntil(37); // After travelling 37 inches
+        intake.move_velocity(-600); // Being outtaking the triball
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -386,82 +384,150 @@ void autonomous()
     {
 
         base.setPose(-45.534, -55.97, 330);
+        cata.tare_position();
 
         base.follow(skillsAutonPath1_txt, 5, 1000, true);
         base.waitUntilDone();
         std::cout << "1 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
 
-        base.follow(skillsAutonPath2_txt, 5, 2000, false);
+        base.follow(skillsAutonPath2_txt, 5, 1000, false);
         base.waitUntilDone();
         std::cout << "2 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
         wingRight.set_value(true);
 
-
-        PID_info PID_storage = {8370, 8370, 0, 0}; // Runs the catapult 46 times for 44 match loads
+        /*
+        PID_info PID_storage = {8400, 8400, 0, 0}; // Runs the catapult 46 times for 44 match loads
 
         while (PID_storage.error > 10) {
             PID_storage = findCataPIDOutput(PID_storage);
             cata.move_velocity(PID_storage.velocity);
-        }
-        cata.move_velocity(0);
- 
 
+            if (PID_storage.accError > 100)
+                PID_storage.accError = 0;
+            pros::delay(15);
+        }
+
+        cata.move_velocity(0);
+
+        */
+ 
         wingRight.set_value(false);
 
-        base.follow(skillsAutonPath3_txt, 8, 3000, true);
+
+        
+        pros::delay(5000);
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        base.follow(skillsAutonPath3_txt, 10, 2000 , true);
         base.waitUntilDone();
         std::cout << "3 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
 
-        base.follow(skillsAutonPath5_txt, 7, 10000, false);
+        base.turnTo(-12.5, 37.5, 1000);
 
-        base.waitUntil(130);
-        wingRight.set_value(true);
+        base.follow(skillsAutonPath4_txt, 10, 2000, true);
 
+        base.waitUntilDone();
+        std::cout << "4 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
+
+
+        intake.move_velocity(-600);
+
+        base.follow(skillsAutonPath5_txt, 7, 6000, false); // Rams the goal from the left side to get the triballs in the left corridor
+
+        base.waitUntil(114);
+        wingLeft.set_value(true);
 
         base.waitUntilDone();
         std::cout << "5 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
 
-        base.turnTo(56.845, 50, 1000);
+        base.follow(skillsAutonPath6_txt, 10, 750, true); // Moves the bot away from the goal
+        std::cout << "5 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
 
-        base.follow(skillsAutonPath6_txt, 7, 10000, false);
 
-        base.waitUntil(14);
-        wingLeft.set_value(true);
-
-        base.waitUntil(60);
-        wingRight.set_value(true);
-
-        base.waitUntilDone();
-        std::cout << "6 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
-
-        base.follow(skillsAutonPath7_txt, 7, 10000, true);
+        base.follow(skillsAutonPath7_txt, 10, 750, true); // Rams the goal one more time
 
         base.waitUntilDone();
         std::cout << "7 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
+        wingLeft.set_value(false);
 
-        base.follow(skillsAutonPath8_txt, 7, 1000, false);
+        base.follow(skillsAutonPath8_txt, 8, 4000, true); // Moves the robot away from the goal in preparation for moving towards the middle
 
         base.waitUntilDone();
-        wingLeft.set_value(false);
-        wingRight.set_value(false);
+        std::cout << "8 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
 
-        base.follow(skillsAutonPath9_txt, 7, 10000, true);
+        base.turnTo(48.78, 95.5128182, 1000);
+
+        wingLeft.set_value(true);
+
+        base.follow(skillsAutonPath9_txt, 8, 4000, false); // Rams the goal in front to get the triballs in the middle
+
+        base.waitUntil(34);
+        wingRight.set_value(true);
 
         base.waitUntilDone();
         std::cout << "9 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
 
-        base.turnTo(0, 60, 1000);
+
+        base.follow(skillsAutonPath10_txt, 8, 750, true); // Moves the robot away from the goal in preparation for ramming
+
+        base.waitUntilDone();
+        std::cout << "10 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
+
+
+        base.follow(skillsAutonPath11_txt, 8, 750, false); // Rams the goal a seconds time to ensure triballs are scored
+
+        base.waitUntilDone();
+        std::cout << "11 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
+        wingLeft.set_value(false);
+        wingRight.set_value(false);
+
+        base.turnTo(47.96, 122.68900, 1000);
+
+        base.follow(skillsAutonPath12_txt, 8, 4000, false);  // Moves the robot farther right
+
+        base.waitUntil(18);
+        wingLeft.set_value(true);
+
+        base.waitUntilDone();
+        std::cout << "12 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
+
+        base.turnTo(3.11, -56.2295081, 1000); // Turns the robot so that the intake faces the goal
+
+        base.waitUntilDone();
+        wingRight.set_value(true);
+
+        base.follow(skillsAutonPath13_txt, 8, 1000, false); // Rams the goal in front for a second time to get all the triballs in the middle
+
+        base.waitUntilDone();
+        std::cout << "13 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
+
+        base.follow(skillsAutonPath14_txt, 8, 1000, true); // Moves the robot away from the goal in preparation for ramming
+
+        base.waitUntilDone();
+        std::cout << "14 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
+
+        base.follow(skillsAutonPath15_txt, 8, 1000, false); // Rams the goal a seconds time to ensure triballs are scored
+
+        base.waitUntilDone();
+        std::cout << "15 done, xy: " << base.getPose().x << ", " << base.getPose().y << std::endl; // Prints position at the end of path
+        wingLeft.set_value(false);
+        wingRight.set_value(false);
+
+        base.follow(skillsAutonPath16_txt, 8, 2000, true); // Moves the bot into the right corridor
 
         base.waitUntilDone();
         wingLeft.set_value(true);
-        wingRight.set_value(true);
 
-        base.follow(skillsAutonPath10_txt, 7, 10000, false);
+        base.follow(skillsAutonPath17_txt, 8, 2000, false); // Rams the right side of the goal to score the triballs in the right corridor
 
-        base.follow(skillsAutonPath11_txt, 7, 10000, true);
+        base.follow(skillsAutonPath18_txt, 8, 750, true); // Moves the robot away from the goal in preparation for ramming
 
-        base.follow(skillsAutonPath12_txt, 7, 10000, false);
+        base.follow(skillsAutonPath19_txt, 8, 500, false); // Rams the goal to ensure triballs are scored
 
+        base.waitUntilDone();
+        wingLeft.set_value(false);
+
+        base.follow(skillsAutonPath18_txt, 8, 750, true); // Moves the robot away from the goal to ensure triballs are scored
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -473,10 +539,31 @@ void autonomous()
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     if (auton[5]) // Shoves the alliance triball into the goal
     {
+        /*
         base.setPose(0, 0, 0);
-        base.moveToPoint(0, 30, 2000, true);
+        base.moveToPoint(0, 24, 2000, true);
         pros::delay(2000);   
         base.moveToPoint(0, 0, 2000, false);
+        */
+        PID_info PID_storage = {8380, 8380, 0, 0}; // Runs the catapult 46 times for 44 match loads
+
+        std::cout << PID_storage.error << std::endl;
+
+        std::cout << "Here" << std::endl;
+
+
+        while (PID_storage.error > 10) {
+            PID_storage = findCataPIDOutput(PID_storage);
+            cata.move_velocity(PID_storage.velocity);
+
+            if (PID_storage.accError > 100)
+                PID_storage.accError = 0;
+            pros::delay(15);
+        }
+
+        std::cout << PID_storage.error << std::endl;
+
+
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
