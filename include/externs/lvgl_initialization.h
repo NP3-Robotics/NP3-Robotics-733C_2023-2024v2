@@ -1,8 +1,10 @@
-#ifndef MAIN
+#ifndef _MAIN_H_ // Header guard to make sure no business happens
+#define _MAIN_H_
 #include "main.h"
-#define MAIN
 #endif
 
+#ifndef _LVGL_INIT_H_ // Header guard to make sure no funny business happens
+#define _LVGL_INIT_H_
 // Decleartions for the far side six ball button
 extern lv_obj_t *far_six_btn;
 extern lv_obj_t *far_six_btn_label;
@@ -38,3 +40,4 @@ extern lv_style_t label_style;
 extern bool auton[]; // Array of button states
 
 extern lv_res_t btn_click(lv_obj_t *btn); // When button is pressed
+#endif

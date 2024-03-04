@@ -1,20 +1,33 @@
-#include "main.h"
-#include "lemlib/api.hpp"
+// External libraries
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <iostream>
 #include <string>
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+
+
+
+// My global variables
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "externs/drivetrain_initialization.h"
 #include "externs/lvgl_initialization.h"
 #include "externs/robot_functions_initialization.h"
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 
 void initialize()
 {
   // Motor brake mode initialization
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-  leftMtrs.set_brake_modes(pros::E_MOTOR_BRAKE_COAST); // Left motors will not actively resist turning
-  rightMtrs.set_brake_modes(pros::E_MOTOR_BRAKE_COAST); // Right motors will not actively resist turning
+  prosLeftMtrs.set_brake_modes(pros::E_MOTOR_BRAKE_COAST); // Left motors will not actively resist turning
+  prosRightMtrs.set_brake_modes(pros::E_MOTOR_BRAKE_COAST); // Right motors will not actively resist turning
 
   cata.set_brake_mode(pros::E_MOTOR_BRAKE_COAST); // Catapult motor will not actively resist turning
+  cata.tare_position();
   intake.set_brake_mode(pros::E_MOTOR_BRAKE_COAST); // Intake motor will not actively resist turning
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -39,20 +52,20 @@ void initialize()
 
   // Temperature and battery checks
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-  for (int i = 0; i < sizeof(leftMtrs.get_temperatures()); i++) // For the left motors
+  for (int i = 0; i++ < sizeof(prosLeftMtrs.get_temperatures());) // For the left motors
   {
-    if (leftMtrs.get_temperatures()[i] >= 55) // Checks if the left motor is running at 50% capacity
+    if (prosLeftMtrs.get_temperatures()[i] >= 55) // Checks if the left motor is running at 50% capacity
     {
-      std::cout << "Left motor #" << i + 1 << " over heating at " << leftMtrs.get_temperatures()[i] << std::endl;
+      std::cout << "Left motor #" << i + 1 << " over heating at " << prosLeftMtrs.get_temperatures()[i] << std::endl;
       controller.rumble("- - - - ");
     }
   }
 
-  for (int i = 0; i < sizeof(rightMtrs.get_temperatures()); i++) 
+  for (int i = 0; i++ < sizeof(prosRightMtrs.get_temperatures());) 
   {
-    if (rightMtrs.get_temperatures()[i] >= 55) // Checks if the right motor is running at 50% capacity
+    if (prosRightMtrs.get_temperatures()[i] >= 55) // Checks if the right motor is running at 50% capacity
     {
-      std::cout << "Right motor #" << i+1 << " over heating at " << rightMtrs.get_temperatures()[i] << std::endl;
+      std::cout << "Right motor #" << i+1 << " over heating at " << prosRightMtrs.get_temperatures()[i] << std::endl;
       controller.rumble("- - - - ");
     }
   }
@@ -84,7 +97,10 @@ void initialize()
 
 void disabled() {} // Has no use
 
-void buttonInitialization(lv_obj_t* button, int freenum, int x, int y, int* dimensions, lv_obj_t* button_label, const char* button_name) {
+// Initialize lvgl buttons
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+void buttonInitialization(lv_obj_t* button, int freenum, int x, int y, int* dimensions, lv_obj_t* button_label, const char* button_name) // Process of creating a button
+{
   lv_obj_set_free_num(button, freenum);
   lv_btn_set_action(button, LV_BTN_ACTION_CLICK, btn_click);
   lv_obj_set_size(button, dimensions[0], dimensions[1]);
@@ -102,7 +118,7 @@ void competition_initialize()
 {
   std::cout<< "Buttons done" << std::endl;
 
-  // Initialize lvgl buttons
+  // Definition of button styles/looks
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   lv_style_copy(&btn_style_rel, &lv_style_plain);
   btn_style_rel.body.radius = 0;
@@ -136,25 +152,38 @@ void competition_initialize()
 
   lv_style_copy(&label_style, &lv_style_plain);
   label_style.text.color = LV_COLOR_WHITE;
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+  // Screen dimensions are 480x240 pixels
   static int buttonDimensions[] = {225, 67};
 
-  // Screen dimensions are 480x240
-
+  // Defintion of specific buttons
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Close side AWP button defitnion
   close_awp_btn = lv_btn_create(lv_scr_act(), NULL);
   close_awp_btn_label = lv_label_create(close_awp_btn, NULL);
+
+  // Close side eliminations button defintion
   close_elim_btn = lv_btn_create(lv_scr_act(), NULL);
   close_elim_btn_label = lv_label_create(close_elim_btn, NULL);
+
+  // Far side six ball button definition
   far_six_btn = lv_btn_create(lv_scr_act(), NULL);
   far_six_btn_label = lv_label_create(far_six_btn, NULL);
+
+  // Far side five ball button definition
   far_five_btn = lv_btn_create(lv_scr_act(), NULL);
   far_five_btn_label = lv_label_create(far_five_btn, NULL);
+
+  // Skills button definition
   skills_btn = lv_btn_create(lv_scr_act(), NULL);
   skills_btn_label = lv_label_create(skills_btn, NULL);
+
+  // Disabled autonomous defintion
   disable_btn = lv_btn_create(lv_scr_act(), NULL);
   disable_btn_label = lv_label_create(disable_btn, NULL);
 
+  // Creates the buttons on the screen
   buttonInitialization(close_awp_btn, 0, -127, 86, buttonDimensions, close_awp_btn_label, "Close AWP");
   buttonInitialization(close_elim_btn, 1, -127, 0, buttonDimensions, close_elim_btn_label, "Close Mid Rush");
   buttonInitialization(far_six_btn, 2, 127, 86, buttonDimensions, far_six_btn_label, "Far Six Ball");
@@ -177,3 +206,4 @@ void competition_initialize()
   lv_btn_set_state(disable_btn, auton[5]);
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
