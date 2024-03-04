@@ -1,11 +1,16 @@
-#include "main.h"
-#include <iostream>
-
+// My global variables
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "externs/drivetrain_initialization.h"
 #include "externs/robot_functions_initialization.h"
+#include "externs/pid_class.h"
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 
 // Robot movement
-//////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 double cubicFunc(double input)
 {
     return 0.5 * pow(input, 3) + input; // Output of a cubic function
@@ -34,7 +39,6 @@ double *motorVelocity(double reverse)
     else // Not moving foward or backward
         direction = 0;
 
-
     // Calculations for the velocity of the left and right motors respectively
     double leftVelocity = 600 * (direction * reverse + turnValue);
     double rightVelocity = 600 * (direction * reverse - turnValue);
@@ -49,10 +53,6 @@ double *motorVelocity(double reverse)
     if (rightVelocity < -600)
         rightVelocity = -600;
 
-    std::cout << "Left velocity is " << leftVelocity << " and right velocity is " << rightVelocity << std::endl;
-
-    // static double velocity[] = {leftVelocity, rightVelocity}; // Creates a list for the velocity
-    
     static double velocity[2];
 
     velocity[0] = leftVelocity;
@@ -60,43 +60,44 @@ double *motorVelocity(double reverse)
 
     return velocity; // Returns the motor velocity list
 }
-//////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 
 
-void opcontrol()
+void opcontrol() // Driving code
 {
     // Initialize variables for opcontrol
-    //////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     double reverse = 1; // For drive direction
 
     bool wingState = false; // For wings
 
     bool checkForHang = false; // For the hang pneumatic
     std::uint32_t timeAtHang = 0; // For the hang pneumatic
-    //////////////////////////////////////////
+
+    PID_info PID_storage;
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     while (true) {
         // Robot movement
-        //////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) // Swaps the direction of robot movement
             reverse *= -1;
 
         double *velocity = motorVelocity(reverse); // Determines speed of the motors
 
-
-        leftMtrs.move_velocity(velocity[0]); // Drives the left side of the drive train
-        rightMtrs.move_velocity(velocity[1]); // Drives the right side of the drive train
-        //////////////////////////////////////////
+        prosLeftMtrs.move_velocity(velocity[0]); // Drives the left side of the drive train
+        prosRightMtrs.move_velocity(velocity[1]); // Drives the right side of the drive train
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
         
     
     
         // Robot functions
-        //////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) // Trigger hang
         {
             hang.set_value(true);
@@ -118,10 +119,6 @@ void opcontrol()
             wingRight.set_value(wingState); // Opens or closes the right wing based on the state
         }
 
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)) // Activate catapult (36:60 gear ratio, 32.4 rpm)
-            cata.move_velocity(54);
-        else // Stop moving catapult when no input
-            cata.move_velocity(0);
 
         if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) // Intake
             intake.move_velocity(600);
@@ -129,7 +126,10 @@ void opcontrol()
             intake.move_velocity(-600);
         else // Stop moving intake when no input
             intake.move_velocity(0);
-        //////////////////////////////////////////
+
+        cata.move_velocity(54 * controller.get_digital(pros::E_CONTROLLER_DIGITAL_A)); // Activate catapult when A is pressed (36:60 gear ratio, 32.4 rpm)
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
