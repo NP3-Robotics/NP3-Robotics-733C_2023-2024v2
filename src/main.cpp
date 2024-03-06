@@ -49,10 +49,10 @@ void initialize()
 
 
 
-
+  /*
   // Temperature and battery checks
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-  for (int i = 0; i++ < sizeof(prosLeftMtrs.get_temperatures());) // For the left motors
+  for (int i = 0; i < sizeof(prosLeftMtrs.get_temperatures()); i++) // For the left motors
   {
     if (prosLeftMtrs.get_temperatures()[i] >= 55) // Checks if the left motor is running at 50% capacity
     {
@@ -61,7 +61,7 @@ void initialize()
     }
   }
 
-  for (int i = 0; i++ < sizeof(prosRightMtrs.get_temperatures());) 
+  for (int i = 0; i < sizeof(prosRightMtrs.get_temperatures()); i++) 
   {
     if (prosRightMtrs.get_temperatures()[i] >= 55) // Checks if the right motor is running at 50% capacity
     {
@@ -85,9 +85,10 @@ void initialize()
   if (controller.get_battery_level() <= 15) // Checks if the battery is 15% or below
   {
     std::cout << "Battery low at " << controller.get_battery_level() << std::endl;
-    controller.rumble("-       ");
+    controller.rumble("- - -");
   }
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  */
 
 
 
@@ -159,13 +160,13 @@ void competition_initialize()
 
   // Defintion of specific buttons
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Close side AWP button defitnion
-  close_awp_btn = lv_btn_create(lv_scr_act(), NULL);
-  close_awp_btn_label = lv_label_create(close_awp_btn, NULL);
+  // Close side five button defitnion
+  close_five_btn = lv_btn_create(lv_scr_act(), NULL);
+  close_five_btn_label = lv_label_create(close_five_btn, NULL);
 
-  // Close side eliminations button defintion
-  close_elim_btn = lv_btn_create(lv_scr_act(), NULL);
-  close_elim_btn_label = lv_label_create(close_elim_btn, NULL);
+  // Close side fourinations button defintion
+  close_four_btn = lv_btn_create(lv_scr_act(), NULL);
+  close_four_btn_label = lv_label_create(close_four_btn, NULL);
 
   // Far side six ball button definition
   far_six_btn = lv_btn_create(lv_scr_act(), NULL);
@@ -184,8 +185,8 @@ void competition_initialize()
   disable_btn_label = lv_label_create(disable_btn, NULL);
 
   // Creates the buttons on the screen
-  buttonInitialization(close_awp_btn, 0, -127, 86, buttonDimensions, close_awp_btn_label, "Close AWP");
-  buttonInitialization(close_elim_btn, 1, -127, 0, buttonDimensions, close_elim_btn_label, "Close Mid Rush");
+  buttonInitialization(close_five_btn, 0, -127, 86, buttonDimensions, close_five_btn_label, "Close Five Ball");
+  buttonInitialization(close_four_btn, 1, -127, 0, buttonDimensions, close_four_btn_label, "Close Four Ball");
   buttonInitialization(far_six_btn, 2, 127, 86, buttonDimensions, far_six_btn_label, "Far Six Ball");
   buttonInitialization(far_five_btn, 3, 127, 0, buttonDimensions, far_five_btn_label, "Far Five Ball");
   buttonInitialization(skills_btn, 4, -127, -86, buttonDimensions, skills_btn_label, "Skills Auton");
@@ -198,8 +199,8 @@ void competition_initialize()
 
   // Sets the buttons to their default state
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-  lv_btn_set_state(close_awp_btn, auton[0]);
-  lv_btn_set_state(close_elim_btn, auton[1]);
+  lv_btn_set_state(close_five_btn, auton[0]);
+  lv_btn_set_state(close_four_btn, auton[1]);
   lv_btn_set_state(far_six_btn, auton[2]);
   lv_btn_set_state(far_five_btn, auton[3]);
   lv_btn_set_state(skills_btn, auton[4]);

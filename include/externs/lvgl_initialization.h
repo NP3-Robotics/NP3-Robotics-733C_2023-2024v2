@@ -13,13 +13,13 @@ extern lv_obj_t *far_six_btn_label;
 extern lv_obj_t *far_five_btn;
 extern lv_obj_t *far_five_btn_label;
 
-// Decleartions for the close side AWP button
-extern lv_obj_t *close_awp_btn;
-extern lv_obj_t *close_awp_btn_label;
+// Decleartions for the close side five ball button
+extern lv_obj_t *close_five_btn;
+extern lv_obj_t *close_five_btn_label;
 
-// Decleartions for the close side elim button
-extern lv_obj_t *close_elim_btn;
-extern lv_obj_t *close_elim_btn_label;
+// Decleartions for the close side four ball button
+extern lv_obj_t *close_four_btn;
+extern lv_obj_t *close_four_btn_label;
 
 // Decleartion for the skills button
 extern lv_obj_t *skills_btn;
