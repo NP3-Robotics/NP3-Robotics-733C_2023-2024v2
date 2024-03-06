@@ -14,6 +14,4 @@ extern pros::Motor_Group prosRightMtrs;
 extern pros::IMU inertial;
 
 extern lemlib::Chassis base;
-
-extern std::shared_ptr<okapi::ChassisController> drive;
 #endif

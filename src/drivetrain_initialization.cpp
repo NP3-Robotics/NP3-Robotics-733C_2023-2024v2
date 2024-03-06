@@ -97,37 +97,3 @@ lemlib::ControllerSettings angularController
 
 
 lemlib::Chassis base(drivetrain, linearController, angularController, sensors); // Complete drivetrain initialization for autonomous
-
-
-
-
-
-// Drivetrain initializations for opcontrol
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Left motors in okapi
-okapi::Motor okapiFrontLeftMtr(20, true, okapi::AbstractMotor::gearset::blue,
-                         okapi::AbstractMotor::encoderUnits::rotations);
-okapi::Motor okapiMiddleLeftMtr(19, true, okapi::AbstractMotor::gearset::blue,
-                         okapi::AbstractMotor::encoderUnits::rotations);
-okapi::Motor okapiBackLeftMtr(18, true, okapi::AbstractMotor::gearset::blue,
-                         okapi::AbstractMotor::encoderUnits::rotations);
-okapi::MotorGroup okapiLeftMtrs{okapiFrontLeftMtr, okapiMiddleLeftMtr, okapiBackLeftMtr};
-
-// Right motors in okapi
-okapi::Motor okapiFrontRightMtr(11, false, okapi::AbstractMotor::gearset::blue,
-                         okapi::AbstractMotor::encoderUnits::rotations);
-okapi::Motor okapiMiddleRightMtr(12, false, okapi::AbstractMotor::gearset::blue,
-                         okapi::AbstractMotor::encoderUnits::rotations);
-okapi::Motor okapiBackRightMtr(13, false, okapi::AbstractMotor::gearset::blue,
-                         okapi::AbstractMotor::encoderUnits::rotations);
-okapi::MotorGroup okapiRightMtrs{okapiFrontRightMtr, okapiMiddleRightMtr, okapiBackRightMtr};
-
-okapi::ChassisScales scales({lemlib::Omniwheel::NEW_325, 12}, okapi::imev5BlueTPR); // Chasis dimensions for constructing drive
-
-// Complete drivetrain initialization for opcontrol
-std::shared_ptr<okapi::ChassisController> drive = 
-    okapi::ChassisControllerBuilder()
-        .withMotors(okapiLeftMtrs, okapiRightMtrs)
-        .withDimensions({okapi::AbstractMotor::gearset::blue, 36 / 60}, {{lemlib::Omniwheel::NEW_325, 12}, okapi::imev5BlueTPR})
-        .build();
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
