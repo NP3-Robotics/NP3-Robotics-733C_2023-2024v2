@@ -93,12 +93,6 @@ void opcontrol() // Driving code
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) // Swaps the direction of robot movement
             reverse = !reverse;
 
-        /*
-        double *velocity = motorVelocity(reverse); // Determines speed of the motors
-
-        prosLeftMtrs.move_velocity(velocity[0]); // Drives the left side of the drive train
-        prosRightMtrs.move_velocity(velocity[1]); // Drives the right side of the drive train
-        */
         if (reverse)
             base.tank(deadband2(-controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y), 0.05), deadband2(-controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), 0.05), 5);
         else
