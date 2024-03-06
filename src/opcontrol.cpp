@@ -2,7 +2,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "externs/drivetrain_initialization.h"
 #include "externs/robot_functions_initialization.h"
-#include "externs/pid_class.h"
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -25,6 +24,14 @@ double deadBand(double deadBand, double input)
     else // Deadbanded section
         return 0; 
 };
+
+int deadband2(int input, double deadband)
+{
+    if (abs(input) < deadband * input)
+        return 0;
+    else
+        return input;
+}
 
 double *motorVelocity(double reverse)
 {
@@ -70,26 +77,32 @@ void opcontrol() // Driving code
 {
     // Initialize variables for opcontrol
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    double reverse = 1; // For drive direction
+    bool reverse = false; // For drive direction
 
-    bool wingState = false; // For wings
+    // For wings
+    bool wingStateLeft = false;
+    bool wingStateRight = false; 
 
     bool checkForHang = false; // For the hang pneumatic
     std::uint32_t timeAtHang = 0; // For the hang pneumatic
-
-    PID_info PID_storage;
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     while (true) {
         // Robot movement
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) // Swaps the direction of robot movement
-            reverse *= -1;
+            reverse = !reverse;
 
+        /*
         double *velocity = motorVelocity(reverse); // Determines speed of the motors
 
         prosLeftMtrs.move_velocity(velocity[0]); // Drives the left side of the drive train
         prosRightMtrs.move_velocity(velocity[1]); // Drives the right side of the drive train
+        */
+        if (reverse)
+            base.tank(deadband2(-controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y), 0.05), deadband2(-controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), 0.05), 5);
+        else
+            base.tank(deadband2(controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y), 0.05), deadband2(controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y), 0.05), 5);
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -114,15 +127,34 @@ void opcontrol() // Driving code
         
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) // Toggle wings
         {
-            wingState = !wingState;
-            wingLeft.set_value(wingState); // Opens or closes the left wing based on the state
-            wingRight.set_value(wingState); // Opens or closes the right wing based on the state
+            if ((wingStateLeft == true && wingStateRight == false) || (wingStateLeft == false && wingStateRight == true))
+            {
+                wingStateLeft = true;
+                wingStateRight = true;
+            }
+            else
+            {
+                wingStateLeft = !wingStateLeft;
+                wingStateRight = !wingStateRight;
+            }
+            wingLeft.set_value(wingStateLeft); // Opens or closes the left wing based on the state
+            wingRight.set_value(wingStateRight); // Opens or closes the right wing based on the state
+        }
+        else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) // Toggle wings
+        {
+            wingStateLeft = !wingStateLeft;
+            wingLeft.set_value(wingStateLeft); // Opens or closes the left wing based on the state
+        }
+        else if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) // Toggle wings
+        {
+            wingStateRight = !wingStateRight;
+            wingRight.set_value(wingStateRight); // Opens or closes the left wing based on the state
         }
 
 
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) // Intake
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) // Intake
             intake.move_velocity(600);
-        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_B)) // Outtake
+        else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) // Outtake
             intake.move_velocity(-600);
         else // Stop moving intake when no input
             intake.move_velocity(0);
