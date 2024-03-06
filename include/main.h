@@ -69,7 +69,6 @@ extern "C"
     void competition_initialize(void);
     void opcontrol(void);
     lv_res_t btn_click(lv_obj_t *btn);
-    void initTeamImg();
 #ifdef __cplusplus
 }
 #endif
@@ -79,8 +78,6 @@ extern "C"
  * You can add C++-only headers here
  */
 // #include <iostream>
-extern double avgEncoder(std::vector<double> mtr);
-extern double convertDegToDist(double degree);
 
 #endif
 
